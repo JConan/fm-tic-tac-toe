@@ -18,6 +18,18 @@
       "vitest/globals",
       "vitest-dom/extend-expect"
     ],
+    "baseUrl": ".",
+    "paths": {
+      "$lib/*": [
+        "src/lib/*"
+      ],
+      "$stores/*": [
+        "src/stores/*"
+      ],
+      "$assets/*": [
+        "src/assets/*"
+      ]
+    }
   },
   "include": [
     "src/**/*.d.ts",
