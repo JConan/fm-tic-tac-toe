@@ -9,7 +9,7 @@ describe('Game board store and function', () => {
 
         const state = get<string[]>(board)
         expect(state).toHaveLength(9)
-        expect(state.filter(cell => cell !== '')).toHaveLength(0)
+        expect(state.filter(cell => cell !== ' ')).toHaveLength(0)
     })
 
     it('should be able to update a cell', () => {
@@ -19,6 +19,15 @@ describe('Game board store and function', () => {
         const state = get<string[]>(board)
 
         expect(state[5]).toBe('X')
+    })
+
+    it('should not be allowed to update cell if already set', () => {
+        const board = CreateBoard("     X   ")
+
+        const state = get<string[]>(board)
+        expect(state[5]).toBe('X')
+        expect(board.setCell(5, 'X')).toBe(false)
+
     })
 
 })
