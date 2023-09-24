@@ -8,6 +8,6 @@ describe("hello", () => {
         expect(button.textContent).toBe('press me')
 
         await fireEvent.click(button)
-        expect(button).toBeInTheDocument()
+        expect(button).not.toBeInTheDocument()
     })
 })
