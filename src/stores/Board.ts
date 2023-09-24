@@ -1,8 +1,7 @@
 import { get, writable } from "svelte/store";
 
-export function CreateBoard(initial?: string) {
+export function createBoard() {
     let board = writable(Array<string>(9).fill(' '))
-    if (initial) board.set(initial.split(''))
 
     function setCell(index: number, player: 'X' | 'O') {
         const state = get(board)
@@ -27,5 +26,11 @@ export function CreateBoard(initial?: string) {
         return undefined
     }
 
-    return { ...board, setCell, hasWinner };
+    function setState(state: string) {
+        board.set(state.split(''))
+    }
+
+    return { ...board, setCell, hasWinner, setState };
 }
+
+export const board = createBoard()

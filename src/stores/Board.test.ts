@@ -1,11 +1,11 @@
 import { get } from "svelte/store"
-import { CreateBoard } from "./Board"
+import { createBoard } from "./Board"
 
 
 describe('Game board store and function', () => {
 
     it('should be empty at initial state', () => {
-        const board = CreateBoard()
+        const board = createBoard()
 
         const state = get<string[]>(board)
         expect(state).toHaveLength(9)
@@ -13,7 +13,7 @@ describe('Game board store and function', () => {
     })
 
     it('should be able to update a cell', () => {
-        const board = CreateBoard()
+        const board = createBoard()
 
         expect(board.setCell(5, 'X')).toBe(true)
         const state = get<string[]>(board)
@@ -22,7 +22,8 @@ describe('Game board store and function', () => {
     })
 
     it('should not be allowed to update cell if already set', () => {
-        const board = CreateBoard("     X   ")
+        const board = createBoard()
+        board.setState("     X   ")
 
         const state = get<string[]>(board)
         expect(state[5]).toBe('X')
@@ -30,42 +31,50 @@ describe('Game board store and function', () => {
     })
 
     it('should be able to detect winning line 0', () => {
-        const board = CreateBoard("XXX      ")
+        const board = createBoard()
+        board.setState("XXX      ")
         expect(board.hasWinner()).toBe('X')
     })
 
     it('should be able to detect winning line 1', () => {
-        const board = CreateBoard("   OOO   ")
+        const board = createBoard()
+        board.setState("   OOO   ")
         expect(board.hasWinner()).toBe('O')
     })
 
     it('should be able to detect winning line 2', () => {
-        const board = CreateBoard("      OOO")
+        const board = createBoard()
+        board.setState("      OOO")
         expect(board.hasWinner()).toBe('O')
     })
 
     it('should be able to detect winning column 0', () => {
-        const board = CreateBoard("X  X  X  ")
+        const board = createBoard()
+        board.setState("X  X  X  ")
         expect(board.hasWinner()).toBe('X')
     })
 
     it('should be able to detect winning column 1', () => {
-        const board = CreateBoard(" X  X  X ")
+        const board = createBoard()
+        board.setState(" X  X  X ")
         expect(board.hasWinner()).toBe('X')
     })
 
     it('should be able to detect winning column 2', () => {
-        const board = CreateBoard("  X  X  X")
+        const board = createBoard()
+        board.setState("  X  X  X")
         expect(board.hasWinner()).toBe('X')
     })
 
     it('should be able to detect winning \\', () => {
-        const board = CreateBoard("X   X   X")
+        const board = createBoard()
+        board.setState("X   X   X")
         expect(board.hasWinner()).toBe('X')
     })
 
     it('should be able to detect winning column 2', () => {
-        const board = CreateBoard("  X X X  ")
+        const board = createBoard()
+        board.setState("  X X X  ")
         expect(board.hasWinner()).toBe('X')
     })
 })
