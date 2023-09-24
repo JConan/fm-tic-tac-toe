@@ -8,10 +8,24 @@ export function CreateBoard(initial?: string) {
         const state = get(board)
         if (state[index] !== ' ') return false
 
-        state[index] = player
-        board.set(state)
+        board.update((state) => {
+            state[index] = player
+            return state
+        })
         return true
     }
 
-    return { ...board, setCell };
+    function hasWinner() {
+        const state = get(board)
+        const winningXPatterns = '^(XXX|...XXX|......XXX|X..X..X..|.X..X..X.|..X..X..X|X...X...X|..X.X.X..)'
+        const winningOPatterns = winningXPatterns.replaceAll('X', 'O')
+
+        if (state.join('').match(winningXPatterns))
+            return 'X'
+        if (state.join('').match(winningOPatterns))
+            return 'O'
+        return undefined
+    }
+
+    return { ...board, setCell, hasWinner };
 }
