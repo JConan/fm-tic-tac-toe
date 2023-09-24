@@ -12,6 +12,19 @@ describe('Game board store and function', () => {
         expect(state.filter(cell => cell !== ' ')).toHaveLength(0)
     })
 
+    it('should be able to reset state', () => {
+        const board = createBoard()
+        board.setState('XOX   OXO')
+
+        let state = get(board)
+        expect(state.join('')).toBe('XOX   OXO')
+
+        board.reset()
+        state = get(board)
+        expect(state.join('')).toBe('         ')
+    })
+
+
     it('should be able to update a cell', () => {
         const board = createBoard()
 

@@ -30,7 +30,11 @@ export function createBoard() {
         board.set(state.split(''))
     }
 
-    return { ...board, setCell, hasWinner, setState };
+    function reset() {
+        setState('         ')
+    }
+
+    return { ...board, setCell, hasWinner, setState, reset };
 }
 
 export const board = createBoard()
