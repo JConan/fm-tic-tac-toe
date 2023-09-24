@@ -24,7 +24,6 @@ describe('Game board store and function', () => {
         expect(state.join('')).toBe('         ')
     })
 
-
     it('should be able to update a cell', () => {
         const board = createBoard()
 
@@ -32,6 +31,17 @@ describe('Game board store and function', () => {
         const state = get<string[]>(board)
 
         expect(state[5]).toBe('X')
+    })
+
+    it.each([
+        ['X', '         '],
+        ['O', '        X'],
+        ['X', '       OX'],
+        ['O', '      XOX'],
+    ])('should tell next player should be "%s" in case "%s"', (expected, testState) => {
+        const board = createBoard()
+        board.setState(testState)
+        expect(board.nextPlayer()).toBe(expected)
     })
 
     it('should not be allowed to update cell if already set', () => {

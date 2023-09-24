@@ -34,7 +34,12 @@ export function createBoard() {
         setState('         ')
     }
 
-    return { ...board, setCell, hasWinner, setState, reset };
+    function nextPlayer() {
+        const emptyCells = get(board).filter(cell => cell === ' ')
+        return emptyCells.length % 2 ? 'X' : 'O'
+    }
+
+    return { ...board, setCell, hasWinner, setState, reset, nextPlayer };
 }
 
 export const board = createBoard()
