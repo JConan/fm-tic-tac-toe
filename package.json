@@ -22,5 +22,9 @@
     "vite": "^4.4.5",
     "vitest": "^0.34.4",
     "vitest-dom": "^0.1.1"
+  },
+  "dependencies": {
+    "@fontsource-variable/outfit": "^5.0.8",
+    "the-new-css-reset": "^1.11.0"
   }
 }
