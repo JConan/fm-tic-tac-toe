@@ -1,11 +1,40 @@
 <script lang="ts">
-    import X from "$assets/icon-x.svg";
-    import X_outline from "$assets/icon-x-outline.svg";
-    import O from "$assets/icon-o.svg";
-    import O_outline from "$assets/icon-o-outline.svg";
+    const X = "/assets/icon-x.svg";
+    const O = "/assets/icon-o.svg";
 
-    export let nextPlayer: string;
     export let cellValue: string;
+    $: cellImage = cellValue === "X" ? X : O;
 </script>
 
-<td on:click>{cellValue}</td>
+<td
+    on:click
+    class:checked={cellValue !== " "}
+    style="--cell-image: url({cellImage})"
+>
+    {cellValue}
+</td>
+
+<style>
+    td {
+        font-size: 0;
+        width: 140px;
+        height: 140px;
+        border-radius: 15px;
+        background: var(--Semi-Dark-Navy, #1f3641);
+        box-shadow: 0px -8px 0px 0px #10212a inset;
+
+        background-position: center;
+        background-size: 50%;
+        background-repeat: no-repeat;
+    }
+    td.checked {
+        background-image: var(--cell-image);
+    }
+    td:not(.checked):hover {
+        background-image: var(--hover-image);
+        position: absolute;
+        height: 144px;
+        top: -4px;
+        box-shadow: 0px -12px 0px 0px #10212a inset;
+    }
+</style>
