@@ -1,6 +1,7 @@
 <script lang="ts">
     import { board } from "$stores/Board";
     import Cell from "./Cell.svelte";
+    import ScoreBar from "./ScoreBar.svelte";
     const X_outline = "/assets/icon-x-outline.svg";
     const O_outline = "/assets/icon-o-outline.svg";
 
@@ -19,25 +20,29 @@
 </script>
 
 <table style="--hover-image: url({hoverImage})">
-    <tr>
-        {#each line1 as cellValue, index}
-            <Cell on:click={clickCell(index)} {cellValue} />
-        {/each}
-    </tr>
-    <tr>
-        {#each line2 as cellValue, index}
-            <Cell on:click={clickCell(index + 3)} {cellValue} />
-        {/each}
-    </tr>
-    <tr>
-        {#each line3 as cellValue, index}
-            <Cell on:click={clickCell(index + 6)} {cellValue} />
-        {/each}
-    </tr>
+    <tbody>
+        <tr>
+            {#each line1 as cellValue, index}
+                <Cell on:click={clickCell(index)} {cellValue} />
+            {/each}
+        </tr>
+        <tr>
+            {#each line2 as cellValue, index}
+                <Cell on:click={clickCell(index + 3)} {cellValue} />
+            {/each}
+        </tr>
+        <tr>
+            {#each line3 as cellValue, index}
+                <Cell on:click={clickCell(index + 6)} {cellValue} />
+            {/each}
+        </tr>
+    </tbody>
+    <ScoreBar />
 </table>
 
 <style>
     table {
+        border-collapse: separate;
         border-spacing: 20px;
     }
     tr {
