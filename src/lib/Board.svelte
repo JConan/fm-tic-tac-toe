@@ -2,8 +2,8 @@
     import { board } from "$stores/Board";
     import Cell from "./Cell.svelte";
     import ScoreBar from "./ScoreBar.svelte";
-    const X_outline = "/assets/icon-x-outline.svg";
-    const O_outline = "/assets/icon-o-outline.svg";
+    const X_outline = `${import.meta.env.BASE_URL}assets/icon-x-outline.svg`;
+    const O_outline = `${import.meta.env.BASE_URL}assets/icon-o-outline.svg`;
 
     $: line1 = $board.slice(0, 3);
     $: line2 = $board.slice(3, 6);

@@ -1,6 +1,6 @@
 <script lang="ts">
-    const X = "/assets/icon-x.svg";
-    const O = "/assets/icon-o.svg";
+    const X = `${import.meta.env.BASE_URL}assets/icon-x.svg`;
+    const O = `${import.meta.env.BASE_URL}assets/icon-o.svg`;
 
     export let cellValue: string;
     $: cellImage = cellValue === "X" ? X : O;

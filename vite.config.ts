@@ -3,8 +3,9 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 import path from 'path'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({mode}) => ({
   plugins: [svelte()],
+  base:  mode === 'production' ? '/fm-tic-tac-toe/' : '/',
   test: {
     globals: true,
     environment: "jsdom",
@@ -18,4 +19,4 @@ export default defineConfig({
       $assets: path.resolve('./src/assets')
     }
   }
-})
+}))
