@@ -11,20 +11,21 @@
     "test:unit": "vitest"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^2.4.2",
-    "@testing-library/svelte": "^4.0.3",
-    "@tsconfig/svelte": "^5.0.0",
+    "@sveltejs/adapter-static": "^3.0.2",
+    "@sveltejs/vite-plugin-svelte": "^2.5.3",
+    "@testing-library/svelte": "^4.2.3",
+    "@tsconfig/svelte": "^5.0.4",
     "jsdom": "^22.1.0",
-    "svelte": "^4.0.5",
-    "svelte-check": "^3.4.6",
-    "tslib": "^2.6.0",
-    "typescript": "^5.0.2",
-    "vite": "^4.4.5",
-    "vitest": "^0.34.4",
+    "svelte": "^4.2.18",
+    "svelte-check": "^3.8.1",
+    "tslib": "^2.6.3",
+    "typescript": "^5.5.2",
+    "vite": "^4.5.3",
+    "vitest": "^0.34.6",
     "vitest-dom": "^0.1.1"
   },
   "dependencies": {
-    "@fontsource-variable/outfit": "^5.0.8",
-    "the-new-css-reset": "^1.11.0"
+    "@fontsource-variable/outfit": "^5.0.13",
+    "the-new-css-reset": "^1.11.2"
   }
 }
