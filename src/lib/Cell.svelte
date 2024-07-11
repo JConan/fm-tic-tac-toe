@@ -6,26 +6,23 @@
 
   export let cellValue: string;
   export let hoverImage: string;
+  export let isEndGame: boolean = false;
+
   let isMouseEntered = false;
   $: cellImage = cellValue === "X" ? X : O;
+  $: isHoverable = !isEndGame && cellValue === " ";
 </script>
 
 <td
   on:click
   on:mouseenter={() => {
-    isMouseEntered = true;
+    isMouseEntered = !isEndGame;
   }}
   on:mouseleave={() => {
     isMouseEntered = false;
   }}
 >
-  <Button
-    class="cell"
-    width={140}
-    height={140}
-    color="dark"
-    hoverable={cellValue === " "}
-  >
+  <Button class="cell" width={140} height={140} color="dark" bind:isHoverable>
     {#if cellValue !== " "}
       <img src={cellImage} alt={cellValue} />
     {:else if isMouseEntered}

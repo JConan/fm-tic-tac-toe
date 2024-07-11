@@ -1,16 +1,11 @@
 <script lang="ts">
   import type { HTMLButtonAttributes } from "svelte/elements";
 
-  type Data = {
-    width?: number;
-    height?: number;
-  };
-
   interface $$Props extends HTMLButtonAttributes {
     color?: keyof typeof colorSchemes;
     width?: number;
     height?: number;
-    hoverable?: boolean;
+    isHoverable?: boolean;
   }
 
   const colorSchemes = {
@@ -47,7 +42,7 @@
   export let color: $$Props["color"] = "yellow";
   export let width: $$Props["width"] = 120;
   export let height: $$Props["height"] = 52;
-  export let hoverable: $$Props["hoverable"] = true;
+  export let isHoverable: $$Props["isHoverable"] = true;
 
   let extraHeight = 0;
 
@@ -58,7 +53,7 @@
   $: top = `top: ${-extraHeight}px`;
 
   const setExtraHeight = (value: number) => () => {
-    if (extraHeight !== 0 || hoverable) {
+    if (extraHeight !== 0 || isHoverable) {
       extraHeight = value;
     }
   };

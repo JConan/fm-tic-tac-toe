@@ -1,21 +1,21 @@
 :root {
-  --light-blue: #31C3BD;
-  --light-blue-hover: #65E9E4;
-  --shadow-blue: #118C87;
+  --light-blue: #31c3bd;
+  --light-blue-hover: #65e9e4;
+  --shadow-blue: #118c87;
 
-  --light-yellow: #F2B137;
-  --light-yellow-hover: #FFC860;
-  --shadow-yellow: #CC8B13;
+  --light-yellow: #f2b137;
+  --light-yellow-hover: #ffc860;
+  --shadow-yellow: #cc8b13;
 
-  --silver: #A8BFC9;
-  --silver-hover: #DBE8ED;
-  --shadow-silver: #6B8997;
+  --silver: #a8bfc9;
+  --silver-hover: #dbe8ed;
+  --shadow-silver: #6b8997;
 
-  --dark-navy: #1A2A33;
-  --semi-dark-navy: #1F3641;
-  --shadow-dark-navy: #10212A;
+  --dark-navy: #1a2a33;
+  --semi-dark-navy: #1f3641;
+  --shadow-dark-navy: #10212a;
 
-  font-family: 'Outfit Variable';
+  font-family: "Outfit Variable";
   line-height: 1.5;
   font-weight: 400;
 
@@ -27,6 +27,10 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+}
+
+* {
+  user-select: none;
 }
 
 body {

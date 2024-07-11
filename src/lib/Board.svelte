@@ -14,14 +14,17 @@
   $: line2 = $board.slice(3, 6);
   $: line3 = $board.slice(6, 9);
 
+  let result = board.hasWinner();
   let nextPlayer: "X" | "O" = board.nextPlayer();
 
   const clickCell = (index: number) => () => {
     board.setCell(index, nextPlayer);
     nextPlayer = board.nextPlayer();
+    result = board.hasWinner();
   };
 
   $: hoverImage = nextPlayer === "X" ? X_outline : O_outline;
+  $: isEndGame = result !== undefined;
 
   function onRestart() {
     data = {
@@ -32,13 +35,14 @@
         if (userChoice) {
           board.reset();
           nextPlayer = board.nextPlayer();
+          result = undefined;
         }
       },
     };
   }
 </script>
 
-<table style="--hover-image: url({hoverImage})">
+<table>
   <thead>
     <tr>
       <th>
@@ -64,17 +68,32 @@
   <tbody>
     <tr>
       {#each line1 as cellValue, index}
-        <Cell on:click={clickCell(index)} {cellValue} bind:hoverImage />
+        <Cell
+          on:click={clickCell(index)}
+          {cellValue}
+          bind:hoverImage
+          bind:isEndGame
+        />
       {/each}
     </tr>
     <tr>
       {#each line2 as cellValue, index}
-        <Cell on:click={clickCell(index + 3)} {cellValue} bind:hoverImage />
+        <Cell
+          on:click={clickCell(index + 3)}
+          {cellValue}
+          bind:hoverImage
+          bind:isEndGame
+        />
       {/each}
     </tr>
     <tr>
       {#each line3 as cellValue, index}
-        <Cell on:click={clickCell(index + 6)} {cellValue} bind:hoverImage />
+        <Cell
+          on:click={clickCell(index + 6)}
+          {cellValue}
+          bind:hoverImage
+          bind:isEndGame
+        />
       {/each}
     </tr>
   </tbody>
