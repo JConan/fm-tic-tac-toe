@@ -10,6 +10,7 @@
     color?: keyof typeof colorSchemes;
     width?: number;
     height?: number;
+    hoverable?: boolean;
   }
 
   const colorSchemes = {
@@ -46,6 +47,8 @@
   export let color: $$Props["color"] = "yellow";
   export let width: $$Props["width"] = 120;
   export let height: $$Props["height"] = 52;
+  export let hoverable: $$Props["hoverable"] = true;
+
   let extraHeight = 0;
 
   let backgroundColor = `background-color: var(${colorSchemes[color!].background})`;
@@ -55,7 +58,9 @@
   $: top = `top: ${-extraHeight}px`;
 
   const setExtraHeight = (value: number) => () => {
-    extraHeight = value;
+    if (extraHeight !== 0 || hoverable) {
+      extraHeight = value;
+    }
   };
 </script>
 

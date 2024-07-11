@@ -64,17 +64,17 @@
   <tbody>
     <tr>
       {#each line1 as cellValue, index}
-        <Cell on:click={clickCell(index)} {cellValue} />
+        <Cell on:click={clickCell(index)} {cellValue} bind:hoverImage />
       {/each}
     </tr>
     <tr>
       {#each line2 as cellValue, index}
-        <Cell on:click={clickCell(index + 3)} {cellValue} />
+        <Cell on:click={clickCell(index + 3)} {cellValue} bind:hoverImage />
       {/each}
     </tr>
     <tr>
       {#each line3 as cellValue, index}
-        <Cell on:click={clickCell(index + 6)} {cellValue} />
+        <Cell on:click={clickCell(index + 6)} {cellValue} bind:hoverImage />
       {/each}
     </tr>
   </tbody>
