@@ -37,6 +37,10 @@
       background: "--silver-hover",
       shadow: "--shadow-silver",
     },
+    dark: {
+      background: "--semi-dark-navy",
+      shadow: "--shadow-dark-navy",
+    },
   };
 
   export let color: $$Props["color"] = "yellow";
