@@ -14,6 +14,7 @@
 </script>
 
 <td
+  data-cell={cellValue}
   on:click
   on:mouseenter={() => {
     isMouseEntered = !isEndGame;
