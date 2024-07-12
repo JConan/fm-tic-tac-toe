@@ -1,103 +1,112 @@
-import { get } from "svelte/store"
-import { createBoard } from "./Board"
+import { get } from "svelte/store";
+import { createBoard } from "./Board";
 
+describe("Game board store and function", () => {
+  it("should be empty at initial state", () => {
+    const board = createBoard();
 
-describe('Game board store and function', () => {
+    const state = get<string[]>(board);
+    expect(state).toHaveLength(9);
+    expect(state.filter((cell) => cell !== " ")).toHaveLength(0);
+  });
 
-    it('should be empty at initial state', () => {
-        const board = createBoard()
+  it("should be able to reset state", () => {
+    const board = createBoard();
+    board.setState("XOX   OXO");
 
-        const state = get<string[]>(board)
-        expect(state).toHaveLength(9)
-        expect(state.filter(cell => cell !== ' ')).toHaveLength(0)
-    })
+    let state = get(board);
+    expect(state.join("")).toBe("XOX   OXO");
 
-    it('should be able to reset state', () => {
-        const board = createBoard()
-        board.setState('XOX   OXO')
+    board.reset();
+    state = get(board);
+    expect(state.join("")).toBe("         ");
+  });
 
-        let state = get(board)
-        expect(state.join('')).toBe('XOX   OXO')
+  it("should be able to update a cell", () => {
+    const board = createBoard();
 
-        board.reset()
-        state = get(board)
-        expect(state.join('')).toBe('         ')
-    })
+    expect(board.setCell(5, "X")).toBe(true);
+    const state = get<string[]>(board);
 
-    it('should be able to update a cell', () => {
-        const board = createBoard()
+    expect(state[5]).toBe("X");
+  });
 
-        expect(board.setCell(5, 'X')).toBe(true)
-        const state = get<string[]>(board)
+  it.each([
+    ["X", "         "],
+    ["O", "        X"],
+    ["X", "       OX"],
+    ["O", "      XOX"],
+  ])(
+    'should tell next player should be "%s" in case "%s"',
+    (expected, testState) => {
+      const board = createBoard();
+      board.setState(testState);
+      expect(board.nextPlayer()).toBe(expected);
+    }
+  );
 
-        expect(state[5]).toBe('X')
-    })
+  it("should not be allowed to update cell if already set", () => {
+    const board = createBoard();
+    board.setState("     X   ");
 
-    it.each([
-        ['X', '         '],
-        ['O', '        X'],
-        ['X', '       OX'],
-        ['O', '      XOX'],
-    ])('should tell next player should be "%s" in case "%s"', (expected, testState) => {
-        const board = createBoard()
-        board.setState(testState)
-        expect(board.nextPlayer()).toBe(expected)
-    })
+    const state = get<string[]>(board);
+    expect(state[5]).toBe("X");
+    expect(board.setCell(5, "X")).toBe(false);
+  });
 
-    it('should not be allowed to update cell if already set', () => {
-        const board = createBoard()
-        board.setState("     X   ")
+  it("should be able to detect winning line 0", () => {
+    const board = createBoard();
+    board.setState("XXX      ");
+    expect(board.hasWinner()).toBe("X");
+    expect(board.getWinnerCells()).toStrictEqual([0, 1, 2]);
+  });
 
-        const state = get<string[]>(board)
-        expect(state[5]).toBe('X')
-        expect(board.setCell(5, 'X')).toBe(false)
-    })
+  it("should be able to detect winning line 1", () => {
+    const board = createBoard();
+    board.setState("   OOO   ");
+    expect(board.hasWinner()).toBe("O");
+    expect(board.getWinnerCells()).toStrictEqual([3, 4, 5]);
+  });
 
-    it('should be able to detect winning line 0', () => {
-        const board = createBoard()
-        board.setState("XXX      ")
-        expect(board.hasWinner()).toBe('X')
-    })
+  it("should be able to detect winning line 2", () => {
+    const board = createBoard();
+    board.setState("      OOO");
+    expect(board.hasWinner()).toBe("O");
+    expect(board.getWinnerCells()).toStrictEqual([6, 7, 8]);
+  });
 
-    it('should be able to detect winning line 1', () => {
-        const board = createBoard()
-        board.setState("   OOO   ")
-        expect(board.hasWinner()).toBe('O')
-    })
+  it("should be able to detect winning column 0", () => {
+    const board = createBoard();
+    board.setState("X  X  X  ");
+    expect(board.hasWinner()).toBe("X");
+    expect(board.getWinnerCells()).toStrictEqual([0, 3, 6]);
+  });
 
-    it('should be able to detect winning line 2', () => {
-        const board = createBoard()
-        board.setState("      OOO")
-        expect(board.hasWinner()).toBe('O')
-    })
+  it("should be able to detect winning column 1", () => {
+    const board = createBoard();
+    board.setState(" X  X  X ");
+    expect(board.hasWinner()).toBe("X");
+    expect(board.getWinnerCells()).toStrictEqual([1, 4, 7]);
+  });
 
-    it('should be able to detect winning column 0', () => {
-        const board = createBoard()
-        board.setState("X  X  X  ")
-        expect(board.hasWinner()).toBe('X')
-    })
+  it("should be able to detect winning column 2", () => {
+    const board = createBoard();
+    board.setState("  X  X  X");
+    expect(board.hasWinner()).toBe("X");
+    expect(board.getWinnerCells()).toStrictEqual([2, 5, 8]);
+  });
 
-    it('should be able to detect winning column 1', () => {
-        const board = createBoard()
-        board.setState(" X  X  X ")
-        expect(board.hasWinner()).toBe('X')
-    })
+  it("should be able to detect winning \\", () => {
+    const board = createBoard();
+    board.setState("X   X   X");
+    expect(board.hasWinner()).toBe("X");
+    expect(board.getWinnerCells()).toStrictEqual([0, 4, 8]);
+  });
 
-    it('should be able to detect winning column 2', () => {
-        const board = createBoard()
-        board.setState("  X  X  X")
-        expect(board.hasWinner()).toBe('X')
-    })
-
-    it('should be able to detect winning \\', () => {
-        const board = createBoard()
-        board.setState("X   X   X")
-        expect(board.hasWinner()).toBe('X')
-    })
-
-    it('should be able to detect winning column 2', () => {
-        const board = createBoard()
-        board.setState("  X X X  ")
-        expect(board.hasWinner()).toBe('X')
-    })
-})
+  it("should be able to detect winning column 2", () => {
+    const board = createBoard();
+    board.setState("  X X X  ");
+    expect(board.hasWinner()).toBe("X");
+    expect(board.getWinnerCells()).toStrictEqual([2, 4, 6]);
+  });
+});
