@@ -1,7 +1,7 @@
 import { get, writable } from "svelte/store";
 
 export function createBoard() {
-  let board = writable(Array<string>(9).fill(" "));
+  let board = writable(Array<"X" | "O" | " ">(9).fill(" "));
 
   function setCell(index: number, player: "X" | "O") {
     const state = get(board);
@@ -26,7 +26,7 @@ export function createBoard() {
   }
 
   function setState(state: string) {
-    board.set(state.split(""));
+    board.set(state.split("") as Array<"X" | "O" | " ">);
   }
 
   function reset() {

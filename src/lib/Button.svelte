@@ -46,8 +46,8 @@
 
   let extraHeight = 0;
 
-  let backgroundColor = `background-color: var(${colorSchemes[color!].background})`;
   let containerSize = `width: ${width}px; height: ${height}px`;
+  $: backgroundColor = `background-color: var(${colorSchemes[color!].background})`;
   $: buttonSize = `width: ${width}px; height: ${height! + extraHeight}px`;
   $: boxShadow = `box-shadow: 0px ${-4 - extraHeight}px 0px 0px var(${colorSchemes[color!].shadow}) inset`;
   $: top = `top: ${-extraHeight}px`;

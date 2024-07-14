@@ -5,8 +5,6 @@
   import type { InGameMenuData } from "./InGameMenu";
   import InGameMenu from "./InGameMenu.svelte";
   import ScoreBar from "./ScoreBar.svelte";
-  const X_outline = `${import.meta.env.BASE_URL}assets/icon-x-outline.svg`;
-  const O_outline = `${import.meta.env.BASE_URL}assets/icon-o-outline.svg`;
 
   let data: InGameMenuData;
 
@@ -15,16 +13,18 @@
   $: line3 = $board.slice(6, 9);
 
   let result = board.hasWinner();
+  let winningCells = board.getWinnerCells();
   let nextPlayer: "X" | "O" = board.nextPlayer();
+  $: isEndGame = result !== undefined;
 
   const clickCell = (index: number) => () => {
-    board.setCell(index, nextPlayer);
-    nextPlayer = board.nextPlayer();
-    result = board.hasWinner();
+    if (!isEndGame) {
+      board.setCell(index, nextPlayer);
+      nextPlayer = board.nextPlayer();
+      result = board.hasWinner();
+      winningCells = board.getWinnerCells();
+    }
   };
-
-  $: hoverImage = nextPlayer === "X" ? X_outline : O_outline;
-  $: isEndGame = result !== undefined;
 
   function onRestart() {
     data = {
@@ -36,6 +36,7 @@
           board.reset();
           nextPlayer = board.nextPlayer();
           result = undefined;
+          winningCells = [];
         }
       },
     };
@@ -71,8 +72,9 @@
         <Cell
           on:click={clickCell(index)}
           {cellValue}
-          bind:hoverImage
           bind:isEndGame
+          bind:nextPlayer
+          isWinningCell={winningCells.includes(index)}
         />
       {/each}
     </tr>
@@ -81,8 +83,9 @@
         <Cell
           on:click={clickCell(index + 3)}
           {cellValue}
-          bind:hoverImage
           bind:isEndGame
+          bind:nextPlayer
+          isWinningCell={winningCells.includes(index + 3)}
         />
       {/each}
     </tr>
@@ -91,8 +94,9 @@
         <Cell
           on:click={clickCell(index + 6)}
           {cellValue}
-          bind:hoverImage
           bind:isEndGame
+          bind:nextPlayer
+          isWinningCell={winningCells.includes(index + 6)}
         />
       {/each}
     </tr>

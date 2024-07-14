@@ -1,33 +1,34 @@
 <script lang="ts">
+  import Icon from "./Icon.svelte";
   import Button from "./Button.svelte";
 
-  const X = `${import.meta.env.BASE_URL}assets/icon-x.svg`;
-  const O = `${import.meta.env.BASE_URL}assets/icon-o.svg`;
-
-  export let cellValue: string;
-  export let hoverImage: string;
+  export let cellValue: "X" | "O" | " ";
+  export let nextPlayer: "X" | "O";
   export let isEndGame: boolean = false;
+  export let isWinningCell: boolean = false;
 
   let isMouseEntered = false;
-  $: cellImage = cellValue === "X" ? X : O;
   $: isHoverable = !isEndGame && cellValue === " ";
+  $: color = (
+    isWinningCell ? (cellValue === "X" ? "blue" : "yellow") : "dark"
+  ) as "dark" | "blue" | "yellow";
 </script>
 
 <td
   data-cell={cellValue}
   on:click
   on:mouseenter={() => {
-    isMouseEntered = !isEndGame;
+    isMouseEntered = isHoverable && !isEndGame;
   }}
   on:mouseleave={() => {
     isMouseEntered = false;
   }}
 >
-  <Button class="cell" width={140} height={140} color="dark" bind:isHoverable>
+  <Button class="cell" width={140} height={140} {color} bind:isHoverable>
     {#if cellValue !== " "}
-      <img src={cellImage} alt={cellValue} />
+      <Icon name={cellValue} outlined={isWinningCell || isMouseEntered} />
     {:else if isMouseEntered}
-      <img src={hoverImage} alt={cellValue} />
+      <Icon name={nextPlayer} outlined={isHoverable} />
     {/if}
   </Button>
 </td>
