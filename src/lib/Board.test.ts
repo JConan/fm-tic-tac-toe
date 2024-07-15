@@ -1,6 +1,31 @@
 import { fireEvent, render } from "@testing-library/svelte";
 import Board__SvelteComponent_ from "./Board.svelte";
 import { board } from "$stores/Board";
+import fs from "fs";
+import path from "path";
+
+// Utility function to read file content
+const readFileContent = (filePath: string) => {
+  return fs.readFileSync(path.resolve(__dirname, filePath), "utf8");
+};
+
+// Mocking fetch globally
+beforeAll(() => {
+  global.fetch = vi.fn((url, options) => {
+    // Check if the URL starts with '/assets'
+    if (url.startsWith("assets")) {
+      // Modify the URL to add '/public' prefix
+      url = `../../public/${url}`;
+      const response = new Response(readFileContent(url), {
+        status: 200,
+        headers: { "Content-Type": "image/svg+xml" },
+      });
+      return Promise.resolve(response);
+    }
+
+    return Promise.reject(new Error("Unknown URL"));
+  });
+});
 
 describe("board component", () => {
   it("should show empty grid", () => {
