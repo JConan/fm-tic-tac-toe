@@ -1,9 +1,41 @@
-import { get, writable } from "svelte/store";
+import { get, writable, derived } from "svelte/store";
+
+export type Optional<T> = T | " ";
+export type CellValue = "X" | "O";
+export type BoardCells = Optional<CellValue>[];
+export type Player = CellValue;
+export type Winner = {
+  winner?: CellValue;
+  cells?: [number, number, number];
+};
 
 export function createBoard() {
-  let board = writable(Array<"X" | "O" | " ">(9).fill(" "));
+  let board = writable<BoardCells>(Array(9).fill(" "));
+  let winner = derived<typeof board, Winner>(board, ($board) => {
+    const indexes = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
 
-  function setCell(index: number, player: "X" | "O") {
+    for (const lineIdx of indexes) {
+      const uniqValues = Array.from(new Set(lineIdx.map((i) => $board[i])));
+      if (uniqValues.length === 1 && uniqValues[0] !== " ") {
+        return {
+          winner: $board[lineIdx[0]] as CellValue,
+          cells: lineIdx,
+        } as Winner;
+      }
+    }
+    return {} as Winner;
+  });
+
+  function setCell(index: number, player: CellValue) {
     const state = get(board);
     if (state[index] !== " ") return false;
 
@@ -12,6 +44,14 @@ export function createBoard() {
       return state;
     });
     return true;
+  }
+
+  function setState(state: string) {
+    board.set(state.split("") as Array<Optional<CellValue>>);
+  }
+
+  function reset() {
+    setState("         ");
   }
 
   function hasWinner() {
@@ -25,17 +65,9 @@ export function createBoard() {
     return undefined;
   }
 
-  function setState(state: string) {
-    board.set(state.split("") as Array<"X" | "O" | " ">);
-  }
-
-  function reset() {
-    setState("         ");
-  }
-
   function nextPlayer() {
     const emptyCells = get(board).filter((cell) => cell === " ");
-    return emptyCells.length % 2 ? "X" : "O";
+    return emptyCells.length % 2 ? "X" : ("O" as CellValue);
   }
 
   function getWinnerCells() {
@@ -62,14 +94,18 @@ export function createBoard() {
   }
 
   return {
-    ...board,
-    setCell,
-    hasWinner,
+    board: {
+      ...board,
+      nextPlayer,
+      setCell,
+      hasWinner,
+      setState,
+      reset,
+      getWinnerCells,
+    },
+    winner,
     setState,
-    reset,
-    nextPlayer,
-    getWinnerCells,
   };
 }
 
-export const board = createBoard();
+export const { board, winner } = createBoard();
