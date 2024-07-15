@@ -1,17 +1,9 @@
 import { get, writable, derived } from "svelte/store";
-
-export type Optional<T> = T | " ";
-export type CellValue = "X" | "O";
-export type BoardCells = Optional<CellValue>[];
-export type Player = CellValue;
-export type Winner = {
-  winner?: CellValue;
-  cells?: [number, number, number];
-};
+import type { Cells, CellValue, Optional, Winner } from "./types";
 
 export function createBoard() {
-  let board = writable<BoardCells>(Array(9).fill(" "));
-  let winner = derived<typeof board, Winner>(board, ($board) => {
+  let cells = writable<Cells>(Array(9).fill(" "));
+  let winner = derived<typeof cells, Winner>(cells, ($board) => {
     const indexes = [
       [0, 1, 2],
       [3, 4, 5],
@@ -36,18 +28,23 @@ export function createBoard() {
   });
 
   function setCell(index: number, player: CellValue) {
-    const state = get(board);
-    if (state[index] !== " ") return false;
+    let updated = false;
 
-    board.update((state) => {
-      state[index] = player;
-      return state;
+    cells.update((state) => {
+      updated = state[index] === " ";
+      if (updated) {
+        const newState = [...state];
+        newState[index] = player;
+        return newState;
+      } else {
+        return state;
+      }
     });
-    return true;
+    return updated;
   }
 
   function setState(state: string) {
-    board.set(state.split("") as Array<Optional<CellValue>>);
+    cells.set(state.split("") as Array<Optional<CellValue>>);
   }
 
   function reset() {
@@ -55,7 +52,7 @@ export function createBoard() {
   }
 
   function hasWinner() {
-    const state = get(board);
+    const state = get(cells);
     const winningXPatterns =
       "^(XXX|...XXX|......XXX|X..X..X..|.X..X..X.|..X..X..X|X...X...X|..X.X.X..)";
     const winningOPatterns = winningXPatterns.replaceAll("X", "O");
@@ -66,7 +63,7 @@ export function createBoard() {
   }
 
   function nextPlayer() {
-    const emptyCells = get(board).filter((cell) => cell === " ");
+    const emptyCells = get(cells).filter((cell) => cell === " ");
     return emptyCells.length % 2 ? "X" : ("O" as CellValue);
   }
 
@@ -82,10 +79,8 @@ export function createBoard() {
       [2, 4, 6],
     ];
 
-    const cells = get(board);
-
     for (const lineIdx of indexes) {
-      const uniqValues = Array.from(new Set(lineIdx.map((i) => cells[i])));
+      const uniqValues = Array.from(new Set(lineIdx.map((i) => get(cells)[i])));
       if (uniqValues.length === 1 && uniqValues[0] !== " ") {
         return lineIdx;
       }
@@ -95,7 +90,7 @@ export function createBoard() {
 
   return {
     board: {
-      ...board,
+      ...cells,
       nextPlayer,
       setCell,
       hasWinner,
