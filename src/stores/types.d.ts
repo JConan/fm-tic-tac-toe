@@ -1,10 +1,13 @@
-export type Optional<T> = T | " ";
-export type CellValue = "X" | "O";
+export type Player = "X" | "O";
+export type CellValue = Player | " ";
+export type Cells = CellValue[];
+export type ResetOptions = Partial<{
+  player: Player;
+  state: string;
+}>;
 
-export type Cells = Optional<CellValue>[];
-export type Player = CellValue;
 export type Winner = {
-  winner?: CellValue;
+  player?: Player;
   cells?: [number, number, number];
 };
 
@@ -12,10 +15,4 @@ export type Score = {
   X: number;
   O: number;
   ties: number;
-};
-
-export type Board = {
-  cells: Cells;
-  nextPlayer: Player;
-  scores: Score;
 };
