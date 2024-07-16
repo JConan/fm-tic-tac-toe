@@ -50,6 +50,19 @@ describe("Game state management", () => {
       const { player, cells } = get(gameStore).winner;
       expect(player).toBe(expectedWinner);
       expect(cells).toEqual(expectedCells);
+
+      reset();
+      expect(get(gameStore).winner.player).toBeUndefined();
     }
   );
+
+  it("should correctly update state when reset after a winning game", () => {
+    reset({ state: "XXX      " });
+    expect(get(gameStore).winner.player).toBeDefined();
+    expect(get(gameStore).winner.cells).toBeDefined();
+
+    reset();
+    expect(get(gameStore).winner.player).toBeUndefined();
+    expect(get(gameStore).winner.cells).toBeUndefined();
+  });
 });

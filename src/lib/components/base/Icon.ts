@@ -1,3 +1,5 @@
+import type { Player } from "$stores/types";
+
 export type BaseColor = "blue" | "yellow";
 export type Color = BaseColor | `${BaseColor}_outlined`;
 export interface ColorScheme {
@@ -8,7 +10,7 @@ export interface ColorScheme {
   strokeWidth?: number;
 }
 
-export type Name = "X" | "O";
+export type Name = Player;
 export interface Asset {
   src: string;
   viewBox: string;

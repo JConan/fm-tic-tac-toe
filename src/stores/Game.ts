@@ -27,8 +27,11 @@ const winner = readable<Winner>({}, (set) => {
           player: $cells[lineIdx[0]] as Player,
           cells: lineIdx,
         });
+        return;
       }
     }
+
+    set({});
   });
 });
 
