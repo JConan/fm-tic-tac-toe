@@ -1,31 +1,12 @@
 <script lang="ts">
-  import { board } from "$stores/Board";
-  import Button from "./Button.svelte";
   import Cell from "./Cell.svelte";
-  import type { InGameMenuData } from "./InGameMenu";
-  import InGameMenu from "./InGameMenu.svelte";
-  import ScoreBar from "./ScoreBar.svelte";
+  import type { InGameMenuData } from "../ui/InGameMenu";
+  import InGameMenu from "../ui/InGameMenu.svelte";
+  import ScoreBar from "../ui/ScoreBar.svelte";
+  import { gameStore, reset } from "$stores/Game";
+  import Button from "../base/Button.svelte";
 
   let data: InGameMenuData;
-
-  $: line1 = $board.slice(0, 3);
-  $: line2 = $board.slice(3, 6);
-  $: line3 = $board.slice(6, 9);
-
-  let result = board.hasWinner();
-  let winningCells = board.getWinnerCells();
-  let nextPlayer: "X" | "O" = board.nextPlayer();
-  $: isEndGame = result !== undefined;
-
-  const clickCell = (index: number) => () => {
-    if (!isEndGame) {
-      board.setCell(index, nextPlayer);
-      nextPlayer = board.nextPlayer();
-      result = board.hasWinner();
-      winningCells = board.getWinnerCells();
-    }
-  };
-
   function onRestart() {
     data = {
       question: "Restart Game?",
@@ -33,10 +14,7 @@
       validateLabel: "Yes, restart",
       choiceHandler(userChoice) {
         if (userChoice) {
-          board.reset();
-          nextPlayer = board.nextPlayer();
-          result = undefined;
-          winningCells = [];
+          reset();
         }
       },
     };
@@ -54,7 +32,7 @@
         />
       </th>
       <th>
-        <span>{nextPlayer} TURN</span>
+        <span>{$gameStore.nextPlayer} TURN</span>
       </th>
       <th>
         <Button on:click={onRestart} color="light-silver" width={52}>
@@ -68,36 +46,18 @@
   </thead>
   <tbody>
     <tr>
-      {#each line1 as cellValue, index}
-        <Cell
-          on:click={clickCell(index)}
-          {cellValue}
-          bind:isEndGame
-          bind:nextPlayer
-          isWinningCell={winningCells.includes(index)}
-        />
+      {#each Array(3) as _, index}
+        <Cell {index} />
       {/each}
     </tr>
     <tr>
-      {#each line2 as cellValue, index}
-        <Cell
-          on:click={clickCell(index + 3)}
-          {cellValue}
-          bind:isEndGame
-          bind:nextPlayer
-          isWinningCell={winningCells.includes(index + 3)}
-        />
+      {#each Array(3) as _, index}
+        <Cell index={index + 3} />
       {/each}
     </tr>
     <tr>
-      {#each line3 as cellValue, index}
-        <Cell
-          on:click={clickCell(index + 6)}
-          {cellValue}
-          bind:isEndGame
-          bind:nextPlayer
-          isWinningCell={winningCells.includes(index + 6)}
-        />
+      {#each Array(3) as _, index}
+        <Cell index={index + 6} />
       {/each}
     </tr>
   </tbody>

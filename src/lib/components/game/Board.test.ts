@@ -1,35 +1,9 @@
 import { fireEvent, render } from "@testing-library/svelte";
 import Board__SvelteComponent_ from "./Board.svelte";
-import { board } from "$stores/Board";
-import fs from "fs";
-import path from "path";
-
-// Utility function to read file content
-const readFileContent = (filePath: string) => {
-  return fs.readFileSync(path.resolve(__dirname, filePath), "utf8");
-};
-
-// Mocking fetch globally
-beforeAll(() => {
-  global.fetch = vi.fn((url, options) => {
-    // Check if the URL starts with '/assets'
-    if (url.startsWith("assets")) {
-      // Modify the URL to add '/public' prefix
-      url = `../../public/${url}`;
-      const response = new Response(readFileContent(url), {
-        status: 200,
-        headers: { "Content-Type": "image/svg+xml" },
-      });
-      return Promise.resolve(response);
-    }
-
-    return Promise.reject(new Error("Unknown URL"));
-  });
-});
+import { reset } from "$stores/Game";
 
 describe("board component", () => {
   it("should show empty grid", () => {
-    board.reset();
     const { getAllByRole } = render(Board__SvelteComponent_);
     const cells = getAllByRole("cell");
     expect(cells).toHaveLength(9);
@@ -39,17 +13,17 @@ describe("board component", () => {
   });
 
   it("should display as the store", () => {
-    board.setState("XOX  OXO");
+    reset({ state: "XOX   OXO" });
     const { getAllByRole } = render(Board__SvelteComponent_);
     const cells = getAllByRole("cell");
 
     expect(cells.map((cell) => cell.getAttribute("data-cell")).join("")).toBe(
-      "XOX  OXO"
+      "XOX   OXO"
     );
   });
 
   it("should be updated after a click", async () => {
-    board.reset();
+    reset();
     const { getAllByRole } = render(Board__SvelteComponent_);
     const cells = getAllByRole("cell");
 
