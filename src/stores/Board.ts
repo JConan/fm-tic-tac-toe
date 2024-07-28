@@ -1,50 +1,170 @@
-import { readable, writable } from "svelte/store";
+import { derived, writable } from "svelte/store";
 
-type Player = "X" | "O";
-type CellValue = Player | " ";
+export type Player = "X" | "O";
+export type CellValue = Player | " ";
 
-type Cell = ReturnType<typeof createCellStore>;
-type CellTuple<L extends number, T extends any[] = []> = T["length"] extends L
-  ? T
-  : CellTuple<L, [...T, Cell]>;
+export type CellStore = ReturnType<typeof createCellStore>;
+export type Cell = Omit<CellStore, "set">;
+export type CellTuple<
+  L extends number,
+  T extends any[] = []
+> = T["length"] extends L ? T : CellTuple<L, [...T, Cell]>;
 
-type Board = CellTuple<9>;
-type Choice = {
+export type Winner = {
+  player: Player;
+  cells: [number, number, number];
+};
+export type Board = CellTuple<9>;
+export type Choice = {
   index: number;
   value: Player;
 };
 
 export function createCellStore() {
-  const { update, subscribe } = writable<CellValue>(" ");
+  const { set, update, subscribe } = writable<CellValue>(" ");
   return {
     subscribe,
-    set: (value: Player) =>
-      update(($current) => ($current !== " " ? $current : value)),
+    set(value: Player) {
+      let success = false;
+      update(($current) => {
+        success = $current === " ";
+        return $current !== " " ? $current : value;
+      });
+      return success;
+    },
+    reset() {
+      set(" ");
+    },
   };
 }
 
-export function is_adajcent(index_a: number, index_b: number) {
-  const [aX, aY] = [Math.floor(index_a / 3), index_a % 3];
-  const [bX, bY] = [Math.floor(index_b / 3), index_b % 3];
+export function hasAligned(indexes: number[]) {
+  const winningCombinations = [
+    [0, 1, 2], // Horizontal top row
+    [3, 4, 5], // Horizontal middle row
+    [6, 7, 8], // Horizontal bottom row
+    [0, 3, 6], // Vertical left column
+    [1, 4, 7], // Vertical middle column
+    [2, 5, 8], // Vertical right column
+    [0, 4, 8], // Diagonal from top-left to bottom-right
+    [2, 4, 6], // Diagonal from top-right to bottom-left
+  ];
 
-  return Math.max(Math.abs(aX - bX), Math.abs(aY - bY)) === 1;
+  for (let combination of winningCombinations) {
+    if (combination.every((value) => indexes.includes(value)))
+      return combination;
+  }
+
+  return null;
 }
 
-export function createBoard() {
+/**
+ * Board with multiple stores for reactive process
+ *
+ * select a cell will update :
+ * - a particular cell
+ * - next player
+ *
+ * cell's update event will update :
+ * - lastChoice
+ * - playerXCells if it's player X
+ * - playerOCells if it's player O
+ *
+ * 'winner' is derived from playerXCells and playerOCells
+ * 'endGame' is derived from winner and player cells total count
+ */
+
+function createBoardInternalStores(initialPlayer: Player) {
+  // stores
   const cells = Array(9)
     .fill(0)
-    .map(() => createCellStore()) as Board;
-  const lastChoice = writable<Choice | undefined>(undefined);
+    .map(() => createCellStore()) as CellStore[];
+  const lastChoice = writable<Choice | undefined>();
+  const nextPlayer = writable<Player>(initialPlayer);
+
+  const playerXCells = writable<number[]>([]);
+  const playerOCells = writable<number[]>([]);
+
+  // derived winner from player cells
+  const winner = derived([playerXCells, playerOCells], (playerCells) => {
+    const players = [
+      { index: 0, player: "X" },
+      { index: 1, player: "O" },
+    ];
+    for (const { index, player } of players) {
+      const cells = hasAligned(playerCells[index]);
+      if (cells) return { player, cells } as Winner;
+    }
+  });
+
+  const endGame = derived(
+    [winner, playerXCells, playerOCells],
+    ([$winner, $playerXCells, $playerOCells]) => {
+      if ($winner !== undefined) return true;
+      if ($playerXCells.length + $playerOCells.length === 9) return true;
+      return false;
+    }
+  );
 
   // react to cells changes and register it in lastChoice
   cells.map((cell, index) => {
     cell.subscribe((value) => {
-      if (value !== " ") lastChoice.set({ index, value });
+      if (value !== " ") {
+        lastChoice.set({ index, value });
+        const player = value === "X" ? playerXCells : playerOCells;
+        player.update(($cells) => [...$cells, index]);
+      }
     });
   });
 
   return {
     cells,
-    lastChoice: { subscribe: lastChoice.subscribe },
+    lastChoice,
+    nextPlayer,
+    winner,
+    endGame,
   };
+}
+
+/**
+ * Board store wrapper proxyfied access to cells data in read only
+ */
+export function createBoardStore(initialPlayer: Player = "X") {
+  const boardStores = createBoardInternalStores(initialPlayer);
+  const { nextPlayer, cells, endGame, lastChoice, winner } = boardStores;
+
+  const boardStore = derived(
+    [nextPlayer, endGame, lastChoice, winner],
+    ([nextPlayer, endGame, lastChoice, winner]) => ({
+      nextPlayer,
+      endGame,
+      lastChoice,
+      winner,
+    })
+  );
+
+  const boardMethods = {
+    // update next player and cell successfully updated
+    select: (index: number) => {
+      nextPlayer.update(($nextPlayer) => {
+        if (cells[index].set($nextPlayer))
+          return $nextPlayer === "X" ? "O" : "X";
+        return $nextPlayer;
+      });
+    },
+  };
+
+  return new Proxy(
+    { ...boardStore, ...boardMethods },
+    {
+      get(target, property) {
+        // wrapper
+        if (Object.getOwnPropertyNames(target).includes(property.toString())) {
+          return target[property as keyof typeof target];
+        }
+
+        return cells[property as keyof typeof cells];
+      },
+    }
+  ) as Board & typeof boardStore & typeof boardMethods;
 }
