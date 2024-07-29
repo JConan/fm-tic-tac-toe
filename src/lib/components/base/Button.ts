@@ -5,6 +5,7 @@ export interface ButtonProps extends HTMLButtonAttributes {
   width?: number;
   height?: number;
   isHoverable?: boolean;
+  isHovering?: boolean;
 }
 
 export const colorSchemes = {

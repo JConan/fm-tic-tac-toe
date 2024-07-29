@@ -1,48 +1,43 @@
-import { fireEvent, render } from "@testing-library/svelte";
+import { render, within } from "@testing-library/svelte";
+import userEvent from "@testing-library/user-event";
 import Cell from "./Cell.svelte";
-import { gameStore, reset } from "$stores/Game";
-import type { ResetOptions } from "$stores/types";
-import { get } from "svelte/store";
+import { createBoardStore, createCellStore } from "$stores/Board";
+import type { Player } from "$stores/types";
 
-describe("cell component", () => {
-  function renderCell(index: number, options: ResetOptions = {}) {
-    reset(options);
-    return render(Cell, { index });
+describe("cell base state", () => {
+  function renderCell(nextPlayer: Player = "X") {
+    const board = createBoardStore(nextPlayer);
+    return { ...render(Cell, { board, index: 0 }), board };
   }
 
-  it.each([
-    [
-      "starting with X",
-      { index: 0, options: { player: "X" } },
-      { clicked: { before: " ", after: "X" } },
-    ],
-    [
-      "starting with O",
-      { index: 1, options: { player: "O" } },
-      { clicked: { before: " ", after: "O" } },
-    ],
-    [
-      "no effect as already clicked",
-      { index: 0, options: { player: "X", state: "OXO      " } },
-      { clicked: { before: "O", after: "O" } },
-    ],
-  ])("render scenario - %s", async (_, { index, options }, expected) => {
-    const { getAllByRole } = renderCell(index, (options as ResetOptions) ?? {});
-    const cell = getAllByRole("cell")[0];
-    expect(cell).toBeInTheDocument();
-    expect(cell.getAttribute("data-cell")).toBe(expected.clicked.before);
-    expect(get(gameStore).cells[index]).toBe(expected.clicked.before);
+  it("should able to render empty cell", () => {
+    const { getByRole } = renderCell();
+    const cell = getByRole("cell");
 
-    await fireEvent.click(cell);
-    expect(cell.getAttribute("data-cell")).toBe(expected.clicked.after);
-    expect(get(gameStore).cells[index]).toBe(expected.clicked.after);
+    expect(cell).toBeInTheDocument();
   });
 
-  it("should not be clickable in a winning game", async () => {
-    const { getAllByRole } = renderCell(0, { state: "   XXX   " });
-    const cell = getAllByRole("cell")[0];
+  it("should able to render cell X", async () => {
+    const { getByRole } = renderCell();
+    const cell = getByRole("cell");
 
-    await fireEvent.click(cell);
-    expect(cell.getAttribute("data-cell")).toBe(" ");
+    await userEvent.click(cell);
+    const image = within(cell).getByRole("img");
+
+    expect(image).toBeInTheDocument();
+    expect(image.getAttribute("data-name")).toBe("X");
+    expect(image.getAttribute("data-outlined")).toBe("false");
+  });
+
+  it("should able to hover the cell with X as nextplayer", async () => {
+    const { getByRole } = renderCell();
+    const cell = getByRole("cell");
+
+    await userEvent.hover(cell);
+    const image = within(cell).getByRole("img");
+
+    expect(image).toBeInTheDocument();
+    expect(image.getAttribute("data-name")).toBe("X");
+    expect(image.getAttribute("data-outlined")).toBe("true");
   });
 });

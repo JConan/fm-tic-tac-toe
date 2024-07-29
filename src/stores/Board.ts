@@ -4,17 +4,22 @@ export type Player = "X" | "O";
 export type CellValue = Player | " ";
 
 export type CellStore = ReturnType<typeof createCellStore>;
-export type Cell = Omit<CellStore, "set">;
 export type CellTuple<
   L extends number,
   T extends any[] = []
-> = T["length"] extends L ? T : CellTuple<L, [...T, Cell]>;
+> = T["length"] extends L ? T : CellTuple<L, [...T, CellStore]>;
 
 export type Winner = {
   player: Player;
   cells: [number, number, number];
 };
-export type Board = CellTuple<9>;
+export type Board = ReturnType<typeof createBoardStore>;
+export type BoardState = {
+  nextPlayer: Player;
+  endGame: boolean;
+  lastChoice: Choice | undefined;
+  winner: Winner | undefined;
+};
 export type Choice = {
   index: number;
   value: Player;
@@ -110,6 +115,9 @@ function createBoardInternalStores(initialPlayer: Player) {
   cells.map((cell, index) => {
     cell.subscribe((value) => {
       if (value !== " ") {
+        nextPlayer.update(($nextPlayer) => {
+          return $nextPlayer === "X" ? "O" : "X";
+        });
         lastChoice.set({ index, value });
         const player = value === "X" ? playerXCells : playerOCells;
         player.update(($cells) => [...$cells, index]);
@@ -143,19 +151,8 @@ export function createBoardStore(initialPlayer: Player = "X") {
     })
   );
 
-  const boardMethods = {
-    // update next player and cell successfully updated
-    select: (index: number) => {
-      nextPlayer.update(($nextPlayer) => {
-        if (cells[index].set($nextPlayer))
-          return $nextPlayer === "X" ? "O" : "X";
-        return $nextPlayer;
-      });
-    },
-  };
-
   return new Proxy(
-    { ...boardStore, ...boardMethods },
+    { ...boardStore },
     {
       get(target, property) {
         // wrapper
@@ -166,5 +163,5 @@ export function createBoardStore(initialPlayer: Player = "X") {
         return cells[property as keyof typeof cells];
       },
     }
-  ) as Board & typeof boardStore & typeof boardMethods;
+  ) as CellTuple<9> & typeof boardStore;
 }

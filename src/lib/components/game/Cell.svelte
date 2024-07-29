@@ -1,44 +1,46 @@
 <script lang="ts">
-  import Icon from "../base/Icon.svelte";
+  import type { createBoardStore } from "$stores/Board";
   import Button from "../base/Button.svelte";
-  import { gameStore, selectCellAt } from "$stores/Game";
+  import Icon from "../base/Icon.svelte";
 
+  export let board: ReturnType<typeof createBoardStore>;
   export let index: number;
-  let isMouseEntered = false;
 
-  $: cellValue = $gameStore.cells[index];
-  $: nextPlayer = $gameStore.nextPlayer;
-  $: isEndGame = !!$gameStore.winner.player;
-  $: isWinningCell = $gameStore.winner.cells?.includes(index);
+  const cellStore = board[index];
+  const onClick = () => {
+    if (!$board.endGame) {
+      board[index].set($board.nextPlayer);
+    }
+  };
 
-  $: isHoverable = !isEndGame && cellValue === " ";
-  $: color = (
-    isWinningCell ? (cellValue === "X" ? "blue" : "yellow") : "dark"
-  ) as "dark" | "blue" | "yellow";
-
-  function onClick() {
-    if (!isEndGame && cellValue === " ") selectCellAt(index);
-  }
+  let isHovering: boolean = false;
+  $: isWinningCell = $board.winner && $board.winner.cells.includes(index);
+  $: winner = $board.winner?.player;
 </script>
 
-<td
-  data-cell={cellValue}
+<Button
+  class="cell"
+  role="cell"
+  height={140}
+  width={140}
+  tabindex={$cellStore === " " ? 0 : -1}
   on:click={onClick}
-  on:mouseenter={() => {
-    isMouseEntered = isHoverable && !isEndGame;
-  }}
-  on:mouseleave={() => {
-    isMouseEntered = false;
-  }}
+  bind:isHovering
+  color={isWinningCell ? (winner === "X" ? "blue" : "yellow") : "dark"}
+  isHoverable={$cellStore === " " && !$board.endGame}
 >
-  <Button class="cell" width={140} height={140} {color} bind:isHoverable>
-    {#if cellValue !== " "}
-      <Icon
-        name={cellValue}
-        outlined={isWinningCell || (isHoverable && isMouseEntered)}
-      />
-    {:else if isMouseEntered}
-      <Icon name={nextPlayer} outlined={isHoverable} />
+  {#if $cellStore !== " "}
+    {#if isWinningCell}
+      <Icon name={$cellStore} outlined />
+    {:else}
+      <Icon name={$cellStore} />
     {/if}
-  </Button>
-</td>
+  {:else if isHovering}
+    <Icon name={$board.nextPlayer} outlined />
+  {/if}
+</Button>
+
+<style>
+  :global(button.cell) {
+  }
+</style>

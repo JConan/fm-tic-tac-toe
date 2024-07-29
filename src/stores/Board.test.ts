@@ -51,8 +51,9 @@ describe("calculation utilities", () => {
 describe("board interaction", () => {
   it("should able to select a cell only once", () => {
     const board = createBoardStore();
-    board.select(0);
-    board.select(0);
+    const $board = get(board);
+    board[0].set($board.nextPlayer);
+    board[0].set($board.nextPlayer);
 
     expect(get(board[0])).toBe("X");
     expect(get(board).lastChoice).toStrictEqual({ index: 0, value: "X" });
@@ -64,7 +65,7 @@ describe("board interaction", () => {
     [[4, 0, 3, 1, 7, 2], { player: "O", cells: [0, 1, 2] }],
   ])("should be able to detect winning line", (indexes, winner) => {
     const board = createBoardStore();
-    indexes.map(board.select);
+    indexes.map((index) => board[index].set(get(board).nextPlayer));
 
     board[0] = createCellStore();
 

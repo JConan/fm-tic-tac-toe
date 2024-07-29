@@ -13,7 +13,17 @@
   $: ({ src, style, viewBox } = resolveIcon(name, outlined, color));
 </script>
 
-<svg class="icon" use:inlineSvg={src} {viewBox} {width} {height} {style} />
+<svg
+  role="img"
+  data-name={name}
+  data-outlined={outlined}
+  class="icon"
+  use:inlineSvg={src}
+  {viewBox}
+  {width}
+  {height}
+  {style}
+/>
 
 <style>
   svg {
