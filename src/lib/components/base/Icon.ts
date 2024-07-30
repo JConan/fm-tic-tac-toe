@@ -1,6 +1,6 @@
 import type { Player } from "$stores/Board";
 
-export type BaseColor = "blue" | "yellow";
+export type BaseColor = "blue" | "yellow" | "silver";
 export type Color = BaseColor | `${BaseColor}_outlined`;
 export interface ColorScheme {
   fillColor: string;
@@ -43,8 +43,16 @@ export const colors: Record<Color, ColorScheme> = {
     fillColor: "var(--light-yellow)",
   },
   yellow_outlined: {
-    fillColor: "var(--dark-navy)",
+    fillColor: "var(--semi-dark-navy)",
     strokeColor: "var(--light-yellow)",
+    strokeWidth: 2,
+  },
+  silver: {
+    fillColor: "var(--silver)",
+  },
+  silver_outlined: {
+    fillColor: "var(--semi-dark-navy)",
+    strokeColor: "var(--silver)",
     strokeWidth: 2,
   },
 };

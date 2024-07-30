@@ -25,7 +25,7 @@
     position: relative;
     width: var(--width);
     height: var(--height);
-    border-radius: 10px;
+    border-radius: var(--border-radius, 10px);
 
     & div {
       width: var(--width);
@@ -36,7 +36,7 @@
       display: grid;
       place-items: center;
       transition: all 0.1s;
-      border-radius: 10px;
+      border-radius: var(--border-radius, 10px);
       background-color: var(--background-color);
       box-shadow: 0px -4px 0px 0px var(--box-shadow-color) inset;
     }
