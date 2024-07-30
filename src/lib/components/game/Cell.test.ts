@@ -1,19 +1,18 @@
 import { render, within } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import Cell from "./Cell.svelte";
-import { createBoardStore, createCellStore } from "$stores/Board";
-import type { Player } from "$stores/types";
+import { get } from "svelte/store";
+import { boardStore, resetBoardStore, type Player } from "$stores/Board";
 
 describe("cell base state", () => {
   function renderCell(nextPlayer: Player = "X") {
-    const board = createBoardStore(nextPlayer);
-    return { ...render(Cell, { board, index: 0 }), board };
+    const board = get(resetBoardStore(nextPlayer));
+    return { ...render(Cell, { index: 0 }), board };
   }
 
   it("should able to render empty cell", () => {
     const { getByRole } = renderCell();
     const cell = getByRole("cell");
-
     expect(cell).toBeInTheDocument();
   });
 

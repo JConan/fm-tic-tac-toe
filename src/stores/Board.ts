@@ -1,4 +1,4 @@
-import { derived, writable } from "svelte/store";
+import { derived, get, writable } from "svelte/store";
 
 export type Player = "X" | "O";
 export type CellValue = Player | " ";
@@ -164,4 +164,12 @@ export function createBoardStore(initialPlayer: Player = "X") {
       },
     }
   ) as CellTuple<9> & typeof boardStore;
+}
+
+export const boardStore = writable(createBoardStore());
+
+export function resetBoardStore(nextPlayer?: Player) {
+  const store = createBoardStore(nextPlayer ?? get(get(boardStore)).nextPlayer);
+  boardStore.set(store);
+  return store;
 }

@@ -1,7 +1,7 @@
 import { render, within } from "@testing-library/svelte";
-import Board from "./Board.svelte";
 import userEvent from "@testing-library/user-event";
-import { createBoardStore } from "$stores/Board";
+import Board from "./Board.svelte";
+import { boardStore } from "$stores/Board";
 import { get } from "svelte/store";
 
 describe("board rendering", () => {
@@ -12,9 +12,8 @@ describe("board rendering", () => {
     expect(cells).toHaveLength(9);
   });
 
-  it.only("should stop receive cell selection in endgame", async () => {
-    const board = createBoardStore();
-    const { getAllByRole, debug } = render(Board, { board });
+  it("should stop receive cell selection in endgame", async () => {
+    const { getAllByRole } = render(Board);
 
     const cells = getAllByRole("cell");
     for (let index of [0, 3, 1, 4, 2]) {
@@ -25,7 +24,7 @@ describe("board rendering", () => {
     }
 
     // endgame
-    expect(get(board).endGame).toBe(true);
+    expect(get(get(boardStore)).endGame).toBe(true);
 
     const cell = cells[5];
     await userEvent.click(cell);

@@ -1,0 +1,15 @@
+.button.cell {
+  --height: 140px;
+  --width: 140px;
+}
+
+@media (max-width: 600px) {
+  .button.cell {
+    --height: 96px;
+    --width: 96px;
+
+    & svg {
+      width: 40px;
+    }
+  }
+}

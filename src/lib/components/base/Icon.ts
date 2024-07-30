@@ -1,4 +1,4 @@
-import type { Player } from "$stores/types";
+import type { Player } from "$stores/Board";
 
 export type BaseColor = "blue" | "yellow";
 export type Color = BaseColor | `${BaseColor}_outlined`;

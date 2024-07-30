@@ -1,0 +1,11 @@
+/**
+ * Button default settings
+ */
+.button {
+  --width: 96px;
+  --height: 48px;
+  --hovering-height: 3px;
+  --background-color: var(--silver);
+  --box-shadow-color: var(--shadow-silver);
+  --hovering-background-color: var(--silver-hover);
+}

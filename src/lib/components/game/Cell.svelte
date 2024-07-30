@@ -1,9 +1,11 @@
 <script lang="ts">
-  import type { createBoardStore } from "$stores/Board";
+  import "./Cell.css";
+  import { boardStore, type createBoardStore } from "$stores/Board";
   import Button from "../base/Button.svelte";
   import Icon from "../base/Icon.svelte";
 
-  export let board: ReturnType<typeof createBoardStore>;
+  let board = $boardStore;
+
   export let index: number;
 
   const cellStore = board[index];
@@ -13,21 +15,29 @@
     }
   };
 
-  let isHovering: boolean = false;
+  let isInteracting: boolean = false;
+  const setInteracting = (state: boolean) => () => {
+    isInteracting = canInteract ? state : false;
+  };
+
+  $: canInteract = $cellStore === " " && !$board.endGame;
   $: isWinningCell = $board.winner && $board.winner.cells.includes(index);
-  $: winner = $board.winner?.player;
 </script>
 
 <Button
-  class="cell"
   role="cell"
-  height={140}
-  width={140}
+  class="cell button-{$board.endGame && isWinningCell
+    ? $cellStore === 'X'
+      ? 'blue'
+      : 'yellow'
+    : 'semi-dark'}"
   tabindex={$cellStore === " " ? 0 : -1}
   on:click={onClick}
-  bind:isHovering
-  color={isWinningCell ? (winner === "X" ? "blue" : "yellow") : "dark"}
-  isHoverable={$cellStore === " " && !$board.endGame}
+  on:mouseenter={setInteracting(true)}
+  on:focus={setInteracting(true)}
+  on:mouseleave={setInteracting(false)}
+  on:blur={setInteracting(false)}
+  disabled={!canInteract}
 >
   {#if $cellStore !== " "}
     {#if isWinningCell}
@@ -35,12 +45,7 @@
     {:else}
       <Icon name={$cellStore} />
     {/if}
-  {:else if isHovering}
+  {:else if isInteracting}
     <Icon name={$board.nextPlayer} outlined />
   {/if}
 </Button>
-
-<style>
-  :global(button.cell) {
-  }
-</style>

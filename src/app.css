@@ -12,8 +12,12 @@
   --shadow-silver: #6b8997;
 
   --dark-navy: #1a2a33;
-  --semi-dark-navy: #1f3641;
+  --dark-navy-hover: #2a3a43;
   --shadow-dark-navy: #10212a;
+
+  --semi-dark-navy: #1f3641;
+  --semi-dark-navy-hover: #2f4651;
+  --shadow-semi-dark-navy: #11222b;
 
   font-family: "Outfit Variable";
   line-height: 1.5;
