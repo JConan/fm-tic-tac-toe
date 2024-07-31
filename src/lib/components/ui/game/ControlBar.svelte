@@ -26,7 +26,7 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     margin: 20px;
-    align-items: ce;
+    align-items: center;
 
     & > *:last-child {
       justify-self: end;

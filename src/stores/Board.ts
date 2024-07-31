@@ -151,8 +151,14 @@ export function createBoardStore(initialPlayer: Player = "X") {
     })
   );
 
+  const helpers = {
+    select(index: number) {
+      cells[index].set(get(nextPlayer));
+    },
+  };
+
   return new Proxy(
-    { ...boardStore },
+    { ...boardStore, ...helpers },
     {
       get(target, property) {
         // wrapper
@@ -163,7 +169,7 @@ export function createBoardStore(initialPlayer: Player = "X") {
         return cells[property as keyof typeof cells];
       },
     }
-  ) as CellTuple<9> & typeof boardStore;
+  ) as CellTuple<9> & typeof boardStore & typeof helpers;
 }
 
 export const boardStore = writable(createBoardStore());
