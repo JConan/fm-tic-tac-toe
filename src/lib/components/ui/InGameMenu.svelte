@@ -25,7 +25,11 @@
     <table>
       <tr>
         <td colspan="2">
-          <span class="questionLabel">{data.question}</span>
+          {#if data.type === "Restart"}
+            <span class="message">RESTART GAME?</span>
+          {:else if data.type === "TIE"}
+            <span class="message">ROUND TIED</span>
+          {/if}
         </td>
       </tr>
       <tr>
@@ -36,7 +40,11 @@
             color="silver"
             on:click={userChoice(false)}
           >
-            {data.cancelLabel}
+            {#if data.type === "Restart"}
+              No, Cancel
+            {:else}
+              Quit
+            {/if}
           </Button>
         </td>
         <td>
@@ -46,7 +54,11 @@
             color="yellow"
             on:click={userChoice(true)}
           >
-            {data.validateLabel}
+            {#if data.type === "Restart"}
+              Yes, Restart
+            {:else}
+              Next Round
+            {/if}
           </Button>
         </td>
       </tr>
@@ -78,7 +90,7 @@
         vertical-align: middle;
       }
 
-      & .questionLabel {
+      & .message {
         font-size: 40px;
       }
 

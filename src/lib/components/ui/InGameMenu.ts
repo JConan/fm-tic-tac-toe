@@ -1,6 +1,4 @@
 export type InGameMenuData = {
-  question: string;
-  cancelLabel: string;
-  validateLabel: string;
+  type: "Restart" | "X" | "O" | "TIE";
   choiceHandler: (userChoice: boolean) => void;
 };

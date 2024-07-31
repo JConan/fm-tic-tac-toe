@@ -1,39 +1,66 @@
-<tfoot>
-    <tr>
-        <th style="--bg-color: var(--light-blue)">
-            <div><span>X (YOU)</span><span>14</span></div>
-        </th>
-        <th style="--bg-color: var(--silver)">
-            <div><span>TIES</span><span>32</span></div>
-        </th>
-        <th style="--bg-color: var(--light-yellow)">
-            <div><span>O (CPU)</span><span>11</span></div>
-        </th>
-    </tr>
-</tfoot>
+<script>
+  import Button from "$lib/components/base/Button.svelte";
+  import { gameScoreStore } from "$stores/GameScore";
+</script>
+
+<div class="score-bar">
+  <Button class="score button-blue no-shadow" disabled>
+    <div class="score-display">
+      <span>X (YOU)</span><span class="score-counter"
+        >{$gameScoreStore.playerOne}</span
+      >
+    </div>
+  </Button>
+  <Button class="score no-shadow" disabled>
+    <div class="score-display">
+      <span>TIES</span><span class="score-counter">{$gameScoreStore.tie}</span>
+    </div>
+  </Button>
+  <Button class="score button-yellow no-shadow" disabled>
+    <div class="score-display">
+      <span>O (CPU)</span><span class="score-counter"
+        >{$gameScoreStore.playerTwo}</span
+      >
+    </div>
+  </Button>
+</div>
 
 <style>
-    th {
-        width: 140px;
-        height: 72px;
-        border-radius: 15px;
-        background-color: var(--bg-color);
+  .score-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin: 20px;
+    align-items: center;
+    font-size: 14px;
 
-        & div {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-
-            & span {
-                font-size: 14px;
-                font-weight: 500;
-
-                &:last-child {
-                    font-size: 24px;
-                    font-weight: 700;
-                }
-            }
-        }
+    & .score-counter {
+      font-size: 24px;
+      font-weight: 700;
     }
+
+    & .button {
+      --width: 140px;
+      --height: 72px;
+    }
+
+    & .score-display {
+      display: grid;
+      place-items: center;
+      padding-top: 13px;
+      padding-bottom: 11px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .score-bar :global(.button) {
+      --width: 96px;
+      --height: 64px;
+      font-size: 12px;
+    }
+    .score-counter {
+      font-size: 20px;
+      font-weight: 700;
+    }
+  }
 </style>

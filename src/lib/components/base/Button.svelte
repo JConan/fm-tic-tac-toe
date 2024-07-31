@@ -76,5 +76,8 @@
       --box-shadow-color: var(--shadow-semi-dark-navy);
       --hovering-background-color: var(--semi-dark-navy-hover);
     }
+    &.no-shadow {
+      --box-shadow-color: var(--background-color);
+    }
   }
 </style>
