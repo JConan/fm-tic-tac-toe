@@ -33,6 +33,7 @@
     margin: 20px;
     align-items: center;
     font-size: 14px;
+    line-height: 14px;
 
     & .score-counter {
       font-size: 24px;
@@ -57,10 +58,12 @@
       --width: 96px;
       --height: 64px;
       font-size: 12px;
+      line-height: 12px;
     }
     .score-counter {
       font-size: 20px;
       font-weight: 700;
+      line-height: 20px;
     }
   }
 </style>

@@ -1,7 +1,8 @@
 <script>
   import Button from "$lib/components/base/Button.svelte";
   import Icon from "$lib/components/base/Icon.svelte";
-  import { resetBoardStore, boardStore } from "$stores/Board";
+  import { boardStore } from "$stores/Board";
+  import { restartGame } from "$stores/GameMenu";
   import { inlineSvg } from "@svelte-put/inline-svg";
 
   $: board = $boardStore;
@@ -15,7 +16,7 @@
       TURN
     </span>
   </Button>
-  <Button class="restart" on:click={() => resetBoardStore()}>
+  <Button aria-label="restart" class="restart" on:click={restartGame}>
     <svg use:inlineSvg={"assets/icon-restart.svg"} />
   </Button>
 </header>
