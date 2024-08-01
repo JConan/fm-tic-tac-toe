@@ -2,7 +2,7 @@
   import "the-new-css-reset/css/reset.css";
   import "@fontsource-variable/outfit";
   import favico from "/assets/favicon-32x32.png";
-  import TicTacToe from "$lib/components/ui/TicTacToe.svelte";
+  import TicTacToe from "$lib/components/TicTacToe.svelte";
 </script>
 
 <svelte:head>

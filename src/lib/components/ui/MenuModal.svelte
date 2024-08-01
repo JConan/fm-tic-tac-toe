@@ -168,12 +168,11 @@
 
     dialog[open] .game-ended > div span:last-child {
       font-size: 24px;
-
-      & svg {
-        left: -38px;
-        width: 30px;
-        height: 30px;
-      }
+    }
+    dialog[open] .game-ended > div span:last-child :global(svg) {
+      left: -38px;
+      width: 30px;
+      height: 30px;
     }
   }
 </style>
