@@ -22,16 +22,27 @@
 </script>
 
 <dialog bind:this={dialog}>
-  {#if $board.winner}
+  {#if $board.endGame}
     <div class="game-ended">
       <div
-        style={`--color: var(--light-${$board.winner.player === "X" ? "blue" : "yellow"})`}
+        style={$board.winner &&
+          `--color: var(${$board.winner.player === "X" ? "--light-blue" : "--light-yellow"})`}
       >
-        <span
-          >PLAYER {$gameSettingStore.playerOne === $board.winner.player ? 1 : 2}
-          WINS!</span
-        >
-        <span><Icon name={$board.winner.player} /> TAKE THE ROUND</span>
+        <span>
+          {#if $board.winner}
+            PLAYER {$gameSettingStore.playerOne === $board.winner.player
+              ? 1
+              : 2}
+            WINS!
+          {/if}
+        </span>
+        <span>
+          {#if $board.winner}
+            <Icon name={$board.winner.player} /> TAKE THE ROUND
+          {:else}
+            ROUND TIED
+          {/if}
+        </span>
       </div>
       <Button aria-label="quit" class="no" on:click={clearGameEvent}>
         QUIT

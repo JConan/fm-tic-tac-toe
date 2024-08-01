@@ -105,5 +105,15 @@ describe("Tic Tac Toe integration", () => {
       const svg = within(dialog!).getByRole("img");
       expect(svg).toHaveAttribute("data-name", "O");
     });
+    it("should show a modal message for a tie", async () => {
+      resetBoardStore("X");
+      renderTicTacToe();
+      await runEndgameSequance([0, 1, 2, 6, 7, 8, 3, 4, 5]);
+      const dialog = screen.queryByRole("dialog");
+      expect(dialog).not.toBeNull();
+
+      expect(dialog).toHaveTextContent(/round tied/i);
+      expect(within(dialog!).queryByRole("img")).toBeNull();
+    });
   });
 });
