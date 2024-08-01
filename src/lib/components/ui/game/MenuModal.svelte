@@ -36,7 +36,7 @@
             WINS!
           {/if}
         </span>
-        <span>
+        <span style={$board.winner && "justify-self: end;"}>
           {#if $board.winner}
             <Icon name={$board.winner.player} /> TAKE THE ROUND
           {:else}
@@ -123,12 +123,18 @@
         grid-area: title;
         display: grid;
         grid-template-columns: 1fr;
+        grid-template-areas:
+          "title"
+          "message";
+        justify-items: center;
         font-weight: 700;
 
         & span:first-child {
+          grid-area: title;
           font-size: 16px;
         }
         & span:last-child {
+          grid-area: message;
           position: relative;
           display: flex;
           align-items: center;
@@ -154,6 +160,20 @@
   @media (max-width: 600px) {
     dialog[open] {
       height: 228px;
+    }
+
+    dialog[open] .game-ended {
+      gap: 16px;
+    }
+
+    dialog[open] .game-ended > div span:last-child {
+      font-size: 24px;
+
+      & svg {
+        left: -38px;
+        width: 30px;
+        height: 30px;
+      }
     }
   }
 </style>
