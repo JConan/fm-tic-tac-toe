@@ -1,4 +1,4 @@
-import { derived, get, writable } from "svelte/store";
+import { derived, writable } from "svelte/store";
 import { boardStore } from "./Board";
 import { gameSettingStore } from "./GameSetting";
 
@@ -16,25 +16,26 @@ function createGameScoreStore() {
   });
 
   boardStore.subscribe((board) => {
-    derived([board, gameSettingStore], (stores) => stores).subscribe(
-      ([$boardState, $gameSetting]) => {
-        if ($boardState.endGame) {
-          update(($score) => {
-            const score = { ...$score };
-            if ($boardState.winner) {
-              if ($gameSetting.playerOne === $boardState.winner?.player) {
-                score.playerOne++;
+    board &&
+      derived([board, gameSettingStore], (stores) => stores).subscribe(
+        ([$boardState, $gameSetting]) => {
+          if ($boardState.endGame) {
+            update(($score) => {
+              const score = { ...$score };
+              if ($boardState.winner) {
+                if ($gameSetting.playerOne === $boardState.winner?.player) {
+                  score.playerOne++;
+                } else {
+                  score.playerTwo++;
+                }
               } else {
-                score.playerTwo++;
+                score.tie++;
               }
-            } else {
-              score.tie++;
-            }
-            return score;
-          });
+              return score;
+            });
+          }
         }
-      }
-    );
+      );
   });
 
   return {

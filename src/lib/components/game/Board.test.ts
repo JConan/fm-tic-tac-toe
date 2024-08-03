@@ -1,10 +1,14 @@
 import { render, within } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import Board from "./Board.svelte";
-import { boardStore } from "$stores/Board";
+import { boardStore, resetBoardStore } from "$stores/Board";
 import { get } from "svelte/store";
 
 describe("board rendering", () => {
+  beforeEach(() => {
+    resetBoardStore();
+  });
+
   it("should render the board", () => {
     const { getAllByRole } = render(Board);
 
@@ -24,7 +28,7 @@ describe("board rendering", () => {
     }
 
     // endgame
-    expect(get(get(boardStore)).endGame).toBe(true);
+    expect(get(get(boardStore)!).endGame).toBe(true);
 
     const cell = cells[5];
     await userEvent.click(cell);

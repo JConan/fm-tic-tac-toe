@@ -2,7 +2,7 @@ import { render, within } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import Cell from "./Cell.svelte";
 import { get } from "svelte/store";
-import { boardStore, resetBoardStore, type Player } from "$stores/Board";
+import { resetBoardStore, type Player } from "$stores/Board";
 
 describe("cell base state", () => {
   function renderCell(nextPlayer: Player = "X") {

@@ -3,12 +3,12 @@ import { boardStore } from "./Board";
 
 export type GameEvent = "RestartRequested" | "GameEnded";
 
-const { set, update, subscribe } = writable<GameEvent | undefined>();
+const { set, subscribe } = writable<GameEvent | undefined>();
 
 boardStore.subscribe((board) => {
   set(undefined);
 
-  board.subscribe(($boardState) => {
+  board?.subscribe(($boardState) => {
     if ($boardState.endGame) set("GameEnded");
   });
 });

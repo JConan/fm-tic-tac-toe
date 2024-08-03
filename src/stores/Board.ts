@@ -172,10 +172,14 @@ export function createBoardStore(initialPlayer: Player = "X") {
   ) as CellTuple<9> & typeof boardStore & typeof helpers;
 }
 
-export const boardStore = writable(createBoardStore());
+export const boardStore = writable<Board | undefined>();
 
 export function resetBoardStore(nextPlayer?: Player) {
-  const store = createBoardStore(nextPlayer ?? get(get(boardStore)).nextPlayer);
+  const board = get(boardStore);
+
+  const store = createBoardStore(
+    nextPlayer ? nextPlayer : board ? get(board).nextPlayer : "X"
+  );
   boardStore.set(store);
   return store;
 }

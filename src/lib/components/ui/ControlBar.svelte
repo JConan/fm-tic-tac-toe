@@ -1,11 +1,11 @@
-<script>
+<script lang="ts">
   import Button from "$lib/components/base/Button.svelte";
   import Icon from "$lib/components/base/Icon.svelte";
-  import { boardStore } from "$stores/Board";
+  import { boardStore, type Board } from "$stores/Board";
   import { restartGame } from "$stores/GameMenu";
   import { inlineSvg } from "@svelte-put/inline-svg";
 
-  $: board = $boardStore;
+  $: board = $boardStore as Board;
 </script>
 
 <header>

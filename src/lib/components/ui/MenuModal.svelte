@@ -1,7 +1,7 @@
 <script lang="ts">
   import Button from "$lib/components/base/Button.svelte";
   import Icon from "$lib/components/base/Icon.svelte";
-  import { boardStore, resetBoardStore } from "$stores/Board";
+  import { boardStore, resetBoardStore, type Board } from "$stores/Board";
   import { clearGameEvent, gameEvent } from "$stores/GameMenu";
   import { gameSettingStore } from "$stores/GameSetting";
 
@@ -18,7 +18,7 @@
         break;
     }
   }
-  $: board = $boardStore;
+  $: board = $boardStore as Board;
 </script>
 
 <dialog bind:this={dialog}>

@@ -7,6 +7,7 @@ import { boardStore, resetBoardStore } from "$stores/Board";
 
 describe("Tic Tac Toe integration", () => {
   function renderTicTacToe() {
+    resetBoardStore("X");
     render(TicTacToe);
     document.querySelectorAll("dialog").forEach((dialog) => {
       dialog.showModal = () => {
@@ -25,7 +26,7 @@ describe("Tic Tac Toe integration", () => {
     for (let index of indexes) {
       await userEvent.click(cells[index]);
     }
-    expect(get(get(boardStore)).endGame).toBe(true);
+    expect(get(get(boardStore)!).endGame).toBe(true);
   }
 
   beforeEach(() => {

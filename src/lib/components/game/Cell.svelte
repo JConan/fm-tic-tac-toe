@@ -1,10 +1,10 @@
 <script lang="ts">
   import "./Cell.css";
-  import { boardStore, type createBoardStore } from "$stores/Board";
+  import { boardStore, type Board } from "$stores/Board";
   import Button from "../base/Button.svelte";
   import Icon from "../base/Icon.svelte";
 
-  let board = $boardStore;
+  let board = $boardStore as Board;
 
   export let index: number;
 

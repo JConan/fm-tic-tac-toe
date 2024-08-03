@@ -1,10 +1,9 @@
 import { get } from "svelte/store";
 import { gameScoreStore } from "./GameScore";
-import { boardStore, resetBoardStore } from "./Board";
+import { resetBoardStore } from "./Board";
 
 export function runSequence(indexes: number[]) {
-  resetBoardStore("X");
-  const board = get(boardStore);
+  const board = resetBoardStore("X");
   for (let index of indexes) {
     board.select(index);
   }

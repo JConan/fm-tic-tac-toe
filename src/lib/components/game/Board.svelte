@@ -1,11 +1,13 @@
 <script lang="ts">
   import Cell from "$lib/components/game/Cell.svelte";
-  import { boardStore } from "$stores/Board";
+  import { boardStore, type Board } from "$stores/Board";
+
+  $: board = $boardStore as Board;
 </script>
 
 <div role="grid">
-  {#key $boardStore}
-    {#each $boardStore.entries() as _, index}
+  {#key board}
+    {#each board.entries() as _, index}
       <Cell {index} />
     {/each}
   {/key}
