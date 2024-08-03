@@ -6,7 +6,6 @@
   onMount(() => {
     gameScoreStore.reset();
   });
-  $: console.log($gameScoreStore);
 </script>
 
 <div class="score-bar">

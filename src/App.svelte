@@ -13,7 +13,6 @@
     gameSettingStore.setPlayerOne(
       $gameSettingStore.playerOne === "X" ? "O" : "X"
     );
-    console.log({ player: $gameSettingStore.playerOne });
   }
 
   function start(mode: "CPU" | "Human") {
@@ -121,7 +120,7 @@
 
           & > div {
             background-color: var(--silver);
-            box-shadow: 0px -4px 0px 0px var(--shadow-silver) inset;
+            box-shadow: 0px -4px 0px 0px var(--silver) inset;
             width: calc(198px * 2);
             height: 54px;
             display: flex;

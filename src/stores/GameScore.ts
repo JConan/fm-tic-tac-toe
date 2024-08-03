@@ -19,7 +19,6 @@ function createGameScoreStore() {
 
   function reset() {
     set(initialState);
-    console.log({ score: get({ subscribe }) });
   }
 
   boardStore.subscribe((board) => {
