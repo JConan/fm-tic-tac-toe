@@ -44,7 +44,11 @@
           {/if}
         </span>
       </div>
-      <Button aria-label="quit" class="no" on:click={clearGameEvent}>
+      <Button
+        aria-label="quit"
+        class="no"
+        on:click={() => ($boardStore = undefined)}
+      >
         QUIT
       </Button>
       <Button
