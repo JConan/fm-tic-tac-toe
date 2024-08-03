@@ -1,6 +1,12 @@
 <script>
   import Button from "$lib/components/base/Button.svelte";
   import { gameScoreStore } from "$stores/GameScore";
+  import { onMount } from "svelte";
+
+  onMount(() => {
+    gameScoreStore.reset();
+  });
+  $: console.log($gameScoreStore);
 </script>
 
 <div class="score-bar">

@@ -1,4 +1,4 @@
-import { derived, writable } from "svelte/store";
+import { derived, get, writable } from "svelte/store";
 import { boardStore } from "./Board";
 import { gameSettingStore } from "./GameSetting";
 
@@ -8,12 +8,19 @@ export type GameScore = {
   tie: number;
 };
 
+const initialState = {
+  playerOne: 0,
+  playerTwo: 0,
+  tie: 0,
+};
+
 function createGameScoreStore() {
-  const { set, update, subscribe } = writable<GameScore>({
-    playerOne: 0,
-    playerTwo: 0,
-    tie: 0,
-  });
+  const { set, update, subscribe } = writable<GameScore>(initialState);
+
+  function reset() {
+    set(initialState);
+    console.log({ score: get({ subscribe }) });
+  }
 
   boardStore.subscribe((board) => {
     board &&
@@ -40,13 +47,7 @@ function createGameScoreStore() {
 
   return {
     subscribe,
-    reset() {
-      set({
-        playerOne: 0,
-        playerTwo: 0,
-        tie: 0,
-      });
-    },
+    reset,
   };
 }
 
