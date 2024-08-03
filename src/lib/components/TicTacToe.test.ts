@@ -3,7 +3,8 @@ import TicTacToe from "./TicTacToe.svelte";
 import userEvent from "@testing-library/user-event";
 import { get } from "svelte/store";
 import { clearGameEvent, gameEvent } from "$stores/GameMenu";
-import { boardStore, resetBoardStore } from "$stores/Board";
+import { boardStore, resetBoardStore, type Player } from "$stores/Board";
+import { gameSettingStore } from "$stores/GameSetting";
 
 describe("Tic Tac Toe integration", () => {
   function renderTicTacToe() {
@@ -116,5 +117,24 @@ describe("Tic Tac Toe integration", () => {
       expect(dialog).toHaveTextContent(/round tied/i);
       expect(within(dialog!).queryByRole("img")).toBeNull();
     });
+  });
+
+  describe("players labels", () => {
+    it.each([
+      ["X", "CPU", "X (YOU)", "O (CPU)"],
+      ["X", "Human", "X (P1)", "O (P2)"],
+      ["O", "CPU", "X (CPU)", "O (YOU)"],
+      ["O", "Human", "X (P2)", "O (P1)"],
+    ])(
+      "game setting P1='%s' vs '%s' should give labels '%s' and '%s'",
+      (playerOne, opponent, xLabel, oLabel) => {
+        gameSettingStore.setPlayerOne(playerOne as any);
+        gameSettingStore.setOpponent(opponent as any);
+        renderTicTacToe();
+
+        screen.getAllByText(xLabel);
+        screen.getAllByText(oLabel);
+      }
+    );
   });
 });

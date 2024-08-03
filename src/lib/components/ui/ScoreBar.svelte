@@ -1,31 +1,37 @@
 <script>
   import Button from "$lib/components/base/Button.svelte";
   import { gameScoreStore } from "$stores/GameScore";
+  import { gameSettingStore } from "$stores/GameSetting";
   import { onMount } from "svelte";
 
   onMount(() => {
     gameScoreStore.reset();
   });
+
+  $: playerOne = $gameSettingStore.playerTwo === "Human" ? "P1" : "YOU";
+  $: playerTwo = $gameSettingStore.playerTwo === "Human" ? "P2" : "CPU";
+  $: playerX = $gameSettingStore.playerOne === "X" ? playerOne : playerTwo;
+  $: playerO = $gameSettingStore.playerOne === "O" ? playerOne : playerTwo;
 </script>
 
 <div class="score-bar">
   <Button class="score button-blue no-shadow" disabled>
     <div class="score-display">
-      <span>X (YOU)</span><span class="score-counter"
+      <span>{`X (${playerX})`}</span><span class="score-counter"
         >{$gameScoreStore.playerOne}</span
       >
     </div>
   </Button>
   <Button class="score no-shadow" disabled>
     <div class="score-display">
-      <span>TIES</span><span class="score-counter">{$gameScoreStore.tie}</span>
+      <span>TIES</span>
+      <span class="score-counter">{$gameScoreStore.tie}</span>
     </div>
   </Button>
   <Button class="score button-yellow no-shadow" disabled>
     <div class="score-display">
-      <span>O (CPU)</span><span class="score-counter"
-        >{$gameScoreStore.playerTwo}</span
-      >
+      <span>{`O (${playerO})`}</span>
+      <span class="score-counter">{$gameScoreStore.playerTwo}</span>
     </div>
   </Button>
 </div>
