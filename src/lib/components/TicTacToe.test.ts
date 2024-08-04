@@ -7,7 +7,9 @@ import { boardStore, resetBoardStore, type Player } from "$stores/Board";
 import { gameSettingStore } from "$stores/GameSetting";
 
 describe("Tic Tac Toe integration", () => {
-  function renderTicTacToe() {
+  function renderTicTacToe(player = "X", opponent = "Human") {
+    gameSettingStore.setPlayerOne(player as any);
+    gameSettingStore.setOpponent(opponent as any);
     resetBoardStore("X");
     render(TicTacToe);
     document.querySelectorAll("dialog").forEach((dialog) => {
@@ -128,9 +130,7 @@ describe("Tic Tac Toe integration", () => {
     ])(
       "game setting P1='%s' vs '%s' should give labels '%s' and '%s'",
       (playerOne, opponent, xLabel, oLabel) => {
-        gameSettingStore.setPlayerOne(playerOne as any);
-        gameSettingStore.setOpponent(opponent as any);
-        renderTicTacToe();
+        renderTicTacToe(playerOne, opponent);
 
         screen.getAllByText(xLabel);
         screen.getAllByText(oLabel);

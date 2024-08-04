@@ -3,9 +3,11 @@ import userEvent from "@testing-library/user-event";
 import Board from "./Board.svelte";
 import { boardStore, resetBoardStore } from "$stores/Board";
 import { get } from "svelte/store";
+import { gameSettingStore } from "$stores/GameSetting";
 
 describe("board rendering", () => {
   beforeEach(() => {
+    gameSettingStore.setOpponent("Human");
     resetBoardStore();
   });
 
