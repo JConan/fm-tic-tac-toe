@@ -147,4 +147,42 @@
       }
     }
   }
+  @media (max-width: 600px) {
+    .container {
+      gap: 32px;
+    }
+
+    .container .mark-selector :global(.button svg) {
+      width: 32px;
+      height: 32px;
+    }
+
+    .container .mark-selector :global(.button) {
+      --width: 327px !important;
+      --height: 205px !important;
+    }
+
+    .container :global(.buttons .button) {
+      --width: 327px !important;
+      --height: 56px !important;
+    }
+
+    .container .mark-selector .slider-background,
+    .container .mark-selector .slider-background .cursor > div {
+      width: calc(132px * 2);
+      height: 54px;
+    }
+
+    .container .mark-selector .slider-background .cursor {
+      width: 132px;
+      height: 54px;
+    }
+
+    .container .mark-selector .slider-background .cursor.right {
+      left: 132px;
+    }
+    .container .mark-selector .slider-background .cursor.right > div {
+      margin-left: -132px;
+    }
+  }
 </style>
