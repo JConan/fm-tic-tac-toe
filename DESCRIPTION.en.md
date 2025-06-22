@@ -4,7 +4,7 @@ This project is a simple implementation of the Tic Tac Toe game, built with Svel
 
 ## Features
 
-- Reactive interface: Enjoy the efficiency of Svelte for a smooth user experience.  
-- Responsive design: Compatible with desktop, tablet, and mobile screens.  
-- Local play: Play against a friend directly in the browser.  
-- Clean and modular code: Ideal for Svelte beginners and those looking to explore game concepts in JavaScript.  
+• Reactive interface: Enjoy the efficiency of Svelte for a smooth user experience.  
+• Responsive design: Compatible with desktop, tablet, and mobile screens.  
+• Local play: Play against a friend directly in the browser.  
+• Clean and modular code: Ideal for Svelte beginners and those looking to explore game concepts in JavaScript.  
